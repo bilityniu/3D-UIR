@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D-UIR: 3D Gaussian for Underwater 3D Scene Reconstruction via
+    Physics-Based Appearance-Medium Decoupling</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+  <link rel="icon" type="image/png" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+
+.comparison-table-wrapper {
+    width: 35.7%;
+    margin: 2rem auto;
+    overflow-x: auto;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    transition: all 0.2s ease; /* 为表格单元格添加平滑过渡效果 */
+}
+
+/* 表头样式 */
+.comparison-table thead {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+/* 每行的交替背景色 (灰白交替) */
+.comparison-table tr:nth-child(odd) {
+    background-color: #f9f9f9; /* 浅灰色背景 */
+    transition: background-color 0.2s ease; /* 平滑过渡背景色 */
+}
+
+.comparison-table tr:nth-child(even) {
+    background-color: #eaeaea; /* 稍深的灰色背景 */
+    transition: background-color 0.2s ease; /* 平滑过渡背景色 */
+}
+
+/* 鼠标悬停时改变字体颜色为橙色，字体加粗 */
+.comparison-table tr:hover {
+    color: #66b3ff; /* 字体颜色变为浅蓝色 */
+    font-weight: bold; /* 字体加粗 */
+    cursor: pointer; /* 鼠标指针变成点击样式 */
+    transition: color 0.1s ease, font-weight 0.1s ease; /* 平滑过渡字体颜色和加粗效果 */
+}
+
+/* 高亮效果的自定义颜色 */
+.highlight-red {
+    background-color: #ffcccc;
+    font-weight: bold;
+}
+
+.highlight-orange {
+    background-color: #ffe0b3;
+}
+
+.highlight-yellow {
+    background-color: #ffffcc;
+}
+
+/* 表格标题样式 */
+.comparison-table caption {
+    caption-side: top;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+/* 响应式设计：适配小屏幕 */
+@media screen and (max-width: 768px) {
+    .comparison-table-wrapper {
+        width: 100%;
+    }
+
+    .comparison-table {
+        font-size: 0.75rem; /* 在小屏幕上调整字体大小 */
+    }
+}
+
+
+        /* comparison-container 和 video-selector 调整垂直方向 */
+
+        .video-container {
+            all: unset; /* 禁用所有继承样式 */
+            position: absolute  ;
+            width: 100%;
+            height: 100%;
+        }
+
+        #video1 {
+            all: unset; /* 禁用所有继承样式 */
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #video2-container {
+            all: unset; /* 禁用所有继承样式 */
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #video2 {
+            all: unset; /* 禁用所有继承样式 */
+            position: absolute;
+            width: 1280px;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slider {
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            background: white;
+            left: 50%;
+            cursor: ew-resize;
+            z-index: 10;
+        }
+
+        .slider-button {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: ew-resize;
+        }
+
+        .comparison-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* width: 100%; */
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+
+/* 中间视频 */
+.comparison-container {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 1;
+    top: 80px; /* ✅ 往下偏移 50px */
+}
+
+/* 左右选择器 */
+.method-selector {
+    position: absolute;
+    width: 300px;
+    top: 350px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+/* 左边贴紧视频左边 + 5px */
+.left-selector {
+    left: calc(50% - 640px - 300px - 45px);  /* 50% 中心 - 视频宽度/2 - 选择器宽度 - 5px */
+}
+
+/* 右边贴紧视频右边 + 5px */
+.right-selector {
+    left: calc(50% + 640px + 45px);  /* 50% 中心 + 视频宽度/2 + 5px */
+}
+
+
+        .mode-select {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .mode-select:hover {
+            background-color: #ddd;
+        }
+
+
+        .mode-select.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .mode-select option {
+            background: white;
+            color: black;
+        }
+
+        .video-selector {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px); /* 从当前位置向下移动20px */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-direction: row; /* 保持横向布局 */
+        }
+
+        .video-selector label {
+            color: white;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .video-selector select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: none;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-controls {
+            position: absolute;
+            bottom: -130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            gap: 20px;
+            z-index: 20;
+        }
+
+        .filter-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .filter-control label {
+            margin-bottom: 5px;
+        }
+
+        .filter-control input {
+            width: 150px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 5px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .play-pause-button {
+            background: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-right: 0px;
+            width: 80px;
+        }
+
+        .play-pause-button:hover {
+            background: #e0e0e0;
+        }
+
+        .readme-container {
+            z-index: 3;
+            position: absolute;
+            top: -10px; /* 根据视觉微调 */
+            left: calc(50% - 640px - 450px); /* 视频左边 + 50px */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;  
+            width: calc(70px * 5 + 4 * 5px + 30px);  
+        }
+
+        .readme-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+            width: 100%; 
+        }
+
+        .readme-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .readme-content {
+            line-height: 1.4;
+        }
+
+        
+        .method-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* 调整每个 method-group 之间的间距 */
+        }
+
+        .method-group {
+            display: flex;
+            align-items: center;
+            padding: 2px 0; /* 进一步增加上下间距 */
+        }
+
+        label {
+            width: 150px;
+            font-weight: bold;
+            color: white; /* 将文本颜色设为白色 */
+        }
+
+        .video-selector-container{
+            position: relative; 
+
+        }
+
+        .method-selectors-container {
+            position: relative;  /* 使子元素（left-selector 和 right-selector）相对定位 */
+            width: 100%;         /* 容器宽度 */
+            height: 100%;        /* 容器高度，根据需要调整 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 选中的模式按钮高亮
+        .active {
+            background-color: #4CAF50;
+            color: white;
+        } */
+       
+    </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">
+                <img src="./static/images/favicon.png" alt="icon"
+                     style="height: 1em; vertical-align: middle; margin-right: 0.4em; position: relative; top: -10px; left: 10px;">
+                <span style="font-weight: bold; color: #3399ff;">3D-UIR: </span>3D Gaussian for Underwater 3D Scene Reconstruction via Physics-Based Appearance-Medium Decoupling
+            </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?authuser=1&user=451OzVIAAAAJ">Jieyu Yuan</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://github.com/uJunLI">Yujun Li</a><sup>1</sup>,</span>
+            <span class="author-block">
+                <a href="https://github.com/c-pupil">Yuanlin Zhang</a><sup>1,2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://mmcheng.net/clguo/">Chun-Le Guo</a><sup>1,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://dblp.uni-trier.de/pid/353/7153.html">XiongXin Tang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://dblp.org/pid/187/4384.html">Ruixing Wang</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://li-chongyi.github.io/">Chongyi Li</a><sup>1,3#</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>NanKai University</span>
+            <span class="author-block"><sup>2</sup>Institute of Software, Chinese Academy of Sciences</span>
+            <br>
+            <span class="author-block"><sup>3</sup>NKIARI, Shenzhen Futian</span>
+            <span class="author-block"><sup>4</sup>DJI Co., Ltd</span>
+            <br>
+            <span class="author-block"><sup>#</sup>Corresponding author</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a 
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+                <!-- BibTeX Link -->
+                <span class="link-block">
+                    <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-quote-right"></i>
+                    </span>
+                    <span>BibTeX</span>
+                    </a>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/teaser.png" alt="Teaser" style="width: 100%; height: auto;" />
+
+      <div class="content has-text-justified" style="width: 100%; margin: 0 auto;">
+            Optical scattering and absorption in underwater environments present unique challenges for novel view synthesis. The standard volume rendering equation inadequately models participating media with suspended particles, leading to the incorrect reconstruction of volumetric water as floating artifacts in 3D representation <strong>(left)</strong>. Additionally, light source directionality and viewing angles cause attenuation variations that result in inconsistent scene appearance across viewpoints <strong>(right)</strong>.
+            3DGS lacks proper modeling of scattering media, causing water column effects on scene surfaces and resulting in collapsed depth representations. Existing scattering NVS methods, e.g., SeaThru-NeRF, fail to account for dynamic photometric variations, which introduces water float artifacts (highlighted in yellow boxes).
+            In contrast, our approach effectively models the participating medium to render photorealistic novel views with accurate scene representation, yielding more consistent scene rendering across novel viewpoints and effective elimination of underwater artifacts.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p style="margin: 1px 0;">
+            Novel view synthesis for underwater scene reconstruction presents unique challenges due to complex light-media interactions. 
+            While 3D Gaussian Splatting (3DGS) offers real-time rendering capabilities, it struggles 
+            with underwater inhomogeneous environments where scattering media introduce artifacts and 
+            inconsistent appearance. In this study, we propose a physics-based framework that 
+            disentangles object appearance from water medium effects through specialized Gaussian 
+            modeling. Our approach introduces appearance embeddings which are explicit medium representations 
+            for backscatter and attenuation for enhancing scene consistency. In addition, we propose a 
+            distance-guided optimization for improving geometric fidelity. By integrating these 
+            physics-inspired components through an underwater imaging model, our method achieves both
+            high-quality novel view synthesis and physically accurate scene restoration. Experiments
+            demonstrate our significant improvements in rendering quality and restoration accuracy over
+            existing methods. Our code will be made available upon acceptance. 
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero teaser" >
+    <div class="container">
+        <div class="hero-body">
+            <h2 class="title is-3" style="text-align: center">Pipeline</h2>
+
+            <img src="./static/images/pipeline.png" alt="Teaser" style="width: 1025px; height: auto;" />
+            <div class="content has-text-justified" style="width: 955px; margin: 0 auto;">
+                <p>
+                    <strong>Overview of 3D-UIR:</strong>  
+                </p>
+                <ul>
+                    <li><strong>Appearance Modeling Branch (Yellow):</strong>  
+                        This branch incorporates appearance features and embeddings that are crucial for maintaining view consistency, ensuring accurate scene representation across various perspectives.
+                    </li>
+                    <li><strong>Medium Modeling Branch (Red):</strong>  
+                        The medium modeling branch separately handles backscatter and attenuation, key factors that influence the appearance of objects in underwater environments.
+                    </li>
+                    <li><strong>Pseudo-Depth Maps (Blue):</strong>  
+                        Pseudo-depth maps are utilized to guide distance optimization, improving the accuracy of parameter estimation and enhancing the overall depth accuracy in the scene reconstruction process.
+                    </li>
+                </ul>
+                <p>
+                    <strong>Physics-Based Integration:</strong>  
+                    All components—Appearance Modeling, Medium Modeling, and Pseudo-depth Maps—are integrated into a unified framework through a physics-based underwater image formation model during differentiable rasterization, allowing for smooth, gradient-based optimization.Our method effectively disentangles object appearance from the water medium effects using specialized Gaussian modeling techniques.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<div class="columns is-centered has-text-centered">
+    <h2 class="title is-3" style="color: black; margin-top: 25px;">Video Comparison</h2>
+</div>
+
+<div class="video-selector-container"></div>
+    
+    <div class="video-selector">
+        <label for="videoSelector">Video Selector:</label>
+        <select id="videoSelector">
+            <option value="Japan">Japan</option>
+            <option value="Curasao">Curasao</option>
+            <option value="Panama">Panama</option>
+            <option value="IUI3">IUI3</option>
+        </select>
+    </div>
+</div>
+
+
+
+<div class="comparison-wrapper">
+
+    <div class="readme-container">
+        <div class="readme-box">
+            <div class="readme-title">README</div>
+            <div class="readme-content">
+                • The left side displays the default render video from the Ours method applied to the Japan scene.<br>
+                • The right side displays the default RGB video from the 3DGS method applied to the Japan scene.<br>
+                • Switch scenes via Video Selector dropdown<br>
+                • Drag the slider to compare videos<br>
+                • Click the Pause Button to stop the video<br>
+                • <span style="color: #28A745; font-weight: 600;">RGB Button</span>: Reconstructed Image which presents reconstructed scene geometry from raw sensor data.<br>
+                • <span style="color: #28A745; font-weight: 600;">Clear Button</span>: Restoration Image which shows optimized scene representation with descattering restoration.<br>
+            </div>
+        </div>
+    </div>
+        
+        <div class="method-selector left-selector">
+            <div class="method-group">
+                <label>SeaThru-Nerf</label>
+                <select class="mode-select" data-video="2" data-method="SeaThru-Nerf">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">Depth (colormap)</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>3DGS</label>
+                <select class="mode-select" data-video="2" data-method="3DGS">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">Depth (colormap)</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>SeaSplat</label>
+                <select class="mode-select" data-video="2" data-method="SeaSplat">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">Depth (colormap)</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>Water-Splatting</label>
+                <select class="mode-select" data-video="2" data-method="Water-Splatting">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">Depth (colormap)</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>Ours</label>
+                <select class="mode-select" data-video="2" data-method="Ours">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">Depth (colormap)</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="method-selector right-selector">
+            <div class="method-group">
+                <label>SeaThru-Nerf</label>
+                <select class="mode-select" data-video="1" data-method="SeaThru-Nerf">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">color-depth</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>3DGS</label>
+                <select class="mode-select" data-video="1" data-method="3DGS">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">color-depth</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>SeaSplat</label>
+                <select class="mode-select" data-video="1" data-method="SeaSplat">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">color-depth</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>Water-Splatting</label>
+                <select class="mode-select" data-video="1" data-method="Water-Splatting">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">color-depth</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+
+            <div class="method-group">
+                <label>Ours</label>
+                <select class="mode-select" data-video="1" data-method="Ours">
+                    <option value="rgb">RGB</option>
+                    <option value="depth">Depth (garyscale)</option>
+                    <option value="colormap-depth">color-depth</option>
+                    <option value="clear">Clear</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="comparison-container">
+            <div class="video-container">
+                <video id="video1" loop muted playsinline>
+                    <source src="videos/rgb/Japan/Ours.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div id="video2-container">
+                <video id="video2" loop muted playsinline>
+                    <source src="videos/rgb/Japan/3DGS.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="slider">
+                <div class="slider-button"></div>
+            </div>
+        </div>
+
+        <div class="filter-controls">
+            <button class="play-pause-button" id="playPauseButton">Pause</button>
+        </div>
+    </div>
+    <div class="container" style="width: 1280px; margin: 150px auto 0 auto;">
+        <div class="content has-text-justified">
+            <strong>Comparative Video Analysis:</strong>
+            The comparative results validate the effectiveness of our method in achieving high-quality <span style="color: #66bfff; font-weight: bold;">RGB reconstruction</span> and precise <span style="color: #66bfff; font-weight: bold;">depth estimation</span>. Compared to existing baselines, our approach demonstrates improved structural consistency and photometric accuracy, particularly in distant regions where alternative methods tend to produce artifacts or exhibit depth collapse. These findings underscore the robustness of our framework in addressing the challenges of underwater visual degradation. Furthermore, our <span style="color: #66bfff; font-weight: bold;">descattering restoration</span> significantly improves visual clarity, enabling more faithful scene recovery under scattering-dominant conditions.
+        </div>
+        
+    </div>
+    
+
+<script>
+        const container = document.querySelector('.comparison-container');
+        const slider = document.querySelector('.slider');
+        /*const video1Container = document.getElementById('video-container');*/
+        const video2Container = document.getElementById('video2-container');
+        const video1 = document.getElementById('video1');
+        const video2 = document.getElementById('video2');
+
+
+        let lastTime1 = 0;
+        let lastTime2 = 0;
+
+        function checkRestart(video, lastTime, otherVideo) {
+            // 判断是否刚刚跳回开头（大多数浏览器 loop 会把 currentTime 从接近 duration 变为 0）
+            if (lastTime > 1 && video.currentTime < 0.1) {
+                // 同步重置另一个视频
+                otherVideo.currentTime = 0;
+                otherVideo.play();
+            }
+        }
+
+        video1.addEventListener("timeupdate", () => {
+            checkRestart(video1, lastTime1, video2);
+            lastTime1 = video1.currentTime;
+        });
+
+        video2.addEventListener("timeupdate", () => {
+            checkRestart(video2, lastTime2, video1);
+            lastTime2 = video2.currentTime;
+        });
+
+    
+        let isDragging = false;
+        let currentVideo = 'Japan';  
+    
+        video1.play();
+        video2.play();
+    
+        function handleSliderMove(e) {
+            if (!isDragging) return;
+    
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            const limitedPercentage = Math.min(Math.max(percentage, 0), 100);
+            console.log(limitedPercentage)
+            slider.style.left = `${limitedPercentage}%`;
+            /*console.log(video1Container.style.width )*/
+            video2Container.style.width = `${limitedPercentage}%`;
+        }
+    
+        // 监听鼠标拖动
+        slider.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mousemove', handleSliderMove);
+        document.addEventListener('mouseup', () => isDragging = false);
+    
+        // 监听触摸事件
+        slider.addEventListener('touchstart', () => isDragging = true);
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                handleSliderMove(e.touches[0]);
+            }
+        });
+        document.addEventListener('touchend', () => isDragging = false);
+
+        document.getElementById('videoSelector').addEventListener('change', function () {
+            currentVideo = this.value;
+            isPlaying = true;
+            playPauseButton.textContent = 'Pause';
+            
+            document.querySelectorAll('.mode-select.active').forEach(button => {
+                button.dispatchEvent(new Event('change', { bubbles: true })); // 触发 change 事件
+            });
+        });
+
+        document.querySelectorAll('.mode-select').forEach(select => {
+            select.addEventListener('change', function () {
+                const selector = this.closest('.method-selector');
+                selector.querySelectorAll('.mode-select').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                this.classList.add('active');
+
+                const method = this.dataset.method; // 取方法名，如 "3dgs"
+                const mode = this.value; // 取模式，如 "mode1"
+                const videoNum = this.dataset.video; // 取视频编号，1 或 2
+                const video = document.getElementById(`video${videoNum}`);
+                // 构建路径：使用 data-mode 作为文件夹名
+                const videoPath = `videos/${mode}/${currentVideo}/${method}.mp4`;
+                console.log(videoPath)
+                // 加载新视频
+                video.src = videoPath;
+                video.load();
+
+                video.onloadeddata = function () {
+                    video1.currentTime = 0;
+                    video2.currentTime = 0;
+                    if (isPlaying) {
+                        video1.play();
+                        video2.play();
+                        playPauseButton.textContent = 'Pause';
+                    } else {
+                        video1.pause();
+                        video2.pause();
+                        playPauseButton.textContent = 'Play';
+                    }
+                };
+            });
+
+            select.addEventListener('click', function () {
+                // 手动触发 change 事件
+                this.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+            
+
+        window.addEventListener('load', () => {
+            const leftButton = document.querySelector('.left-selector .method-group .mode-select[data-method="3DGS"]');
+            const rightButton = document.querySelector('.right-selector .method-group .mode-select[data-method="Ours"]');
+            if (leftButton) {
+                leftButton.classList.add('active');
+                leftButton.value = "rgb"; // 设置值为 "rgb"
+                leftButton.dispatchEvent(new Event('change', { bubbles: true })); // 触发 change 事件
+            } else {
+                console.log('Left button not found');
+            }
+            
+            if (rightButton) {
+                rightButton.classList.add('active');
+                rightButton.value = "rgb"; // 设置值为 "rgb"
+                rightButton.dispatchEvent(new Event('change', { bubbles: true })); // 触发 change 事件
+            } else {
+                console.log('Right button not found');
+            }
+        });
+    
+        const playPauseButton = document.getElementById('playPauseButton');
+        let isPlaying = true;
+    
+        playPauseButton.addEventListener('click', () => {
+            if (isPlaying) {
+                video1.pause();
+                video2.pause();
+                playPauseButton.textContent = 'Play';
+            } else {
+                video1.play();
+                video2.play();
+                playPauseButton.textContent = 'Pause';
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+
+
+
+
+
+<section class="section" style="margin-top: 0px;">
+    <div class="container is-max-desktop">
+        <table class="comparison-table" style="margin-top: 10px;">
+            <h2 class="title is-3" style="text-align: center; margin-bottom: 22px;">Quantitative Results Comparison</h2>
+
+            <div class="content has-text-justified">
+                We evaluate our method on three datasets: <strong>SeaThru-NeRF</strong>, <strong>Underwater in the Wild (U-IW)</strong>, and <strong>our Simulated dataset (U-S)</strong>. 
+                SeaThru-NeRF contains four forward-facing real underwater scenes with diverse aquatic and imaging conditions. 
+                U-IW consists of frames sampled from in-the-wild underwater videos collected from the Internet. 
+                Both datasets feature unbounded camera-to-scene distances. 
+                To further evaluate our method, we simulated underwater scenes using four scenes from the MipNeRF-360 dataset.                          
+               </div>
+
+            <thead>
+                <tr>
+                    <th rowspan="2">Method</th>
+                    <th colspan="3">Seathru-Nerf</th>
+                    <th colspan="3">U-IW</th>
+                    <th colspan="3">U-S</th>
+                    <th colspan="2">Speed</th>
+                </tr>
+                <tr>
+                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
+                    <th>FPS ↑</th><th>Training ↓</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SeaThru-Nerf</td>
+                    <td class="highlight-yellow">27.394</td><td>0.860</td><td>0.215</td>
+                    <td>18.942</td><td>0.644</td><td>0.383</td>
+                    <td>24.436</td><td>0.805</td><td>0.293</td>
+                    <td>0.55</td><td>2 h 39 m</td>
+                </tr>
+                <tr>
+                    <td>3DGS</td>
+                    <td>26.188</td><td>0.859</td><td>0.238</td>
+                    <td class="highlight-orange">27.361</td><td class="highlight-orange">0.894</td><td class="highlight-orange">0.158</td>
+                    <td class="highlight-yellow">29.274</td><td class="highlight-orange">0.881</td><td class="highlight-orange">0.233</td>
+                    <td>149.36</td><td>17 m</td>
+                </tr>
+                <tr>
+                    <td>Splatfacto-Wild</td>
+                    <td>25.750</td><td>0.832</td><td>0.229</td>
+                    <td>25.159</td><td>0.847</td><td>0.209</td>
+                    <td>25.786</td><td>0.853</td><td>0.260</td>
+                    <td>42.98</td><td>21 m</td>
+                </tr>
+                <tr>
+                    <td>SeaSplat</td>
+                    <td>27.385</td><td class="highlight-orange">0.866</td><td class="highlight-red">0.194</td>
+                    <td class="highlight-yellow">27.023</td><td class="highlight-yellow">0.889</td><td class="highlight-yellow">0.159</td>
+                    <td>28.566</td><td>0.861</td><td>0.253</td>
+                    <td>42.69</td><td>1 h 25 m</td>
+                </tr>
+                <tr>
+                    <td>RecGS</td>
+                    <td>25.829</td><td>0.857</td><td>0.233</td>
+                    <td>22.186</td><td>0.838</td><td>0.180</td>
+                    <td>24.620</td><td>0.825</td><td>0.259</td></div>
+                    <td>146.62</td><td>38 m</td>
+                </tr>
+                <tr>
+                    <td>Water-Splatting</td>
+                    <td class="highlight-orange">27.573</td><td class="highlight-yellow">0.865</td><td class="highlight-orange">0.198</td>
+                    <td>25.673</td><td>0.882</td><td>0.167</td>
+                    <td class="highlight-orange">29.973</td><td class="highlight-yellow">0.878</td><td class="highlight-yellow">0.235</td>
+                    <td>35.80</td><td>29 m</td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="./static/images/favicon.png" alt="icon" style="width: 20px; height: 20px; position: relative; left: -2px; top: 2px;">
+                        <strong style="color: blueviolet; position: relative; left: -2px;top: -2px;">Ours</strong>
+                    </td>
+                    
+                    <td class="highlight-red">28.116</td><td class="highlight-red">0.876</td><td class="highlight-yellow">0.202</td>
+                    <td class="highlight-red">28.198</td><td class="highlight-red">0.902</td><td class="highlight-red">0.150</td>
+                    <td class="highlight-red">31.227</td><td class="highlight-red">0.891</td><td class="highlight-red">0.187</td>
+                    <td>48.72</td><td>48 m</td>
+                </tr>
+            </tbody>
+        </table>    
+        <div class="content has-text-justified" style="margin-top: 15px;">
+            <strong>Quantitative evaluation of existing methods:</strong>
+            Metrics are averaged across all scenes in various datasets.
+            The top three rankings in each category are highlighted:
+            <span style="background-color: rgba(255, 0, 0, 0.5); padding: 0 4px;">1st</span>,
+            <span style="background-color: rgba(255, 165, 0, 0.4); padding: 0 4px;">2nd</span>,
+            <span style="background-color: rgba(255, 255, 0, 0.3); padding: 0 4px;">3rd</span>.
+            Arrows indicate whether higher (↑) or lower (↓) values are better.
+            <br><br>
+            <strong>
+                More details (including validation experiments) can be found in our paper.
+            </strong>
+        </div>    
+    </div>
+    </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Concurrent Work. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <!-- Concurrent Work. -->
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+            <h2 class="title is-3">Related Links</h2>
+        
+            <div class="content has-text-justified">
+                <p>
+                There are several key works in the field of underwater scene reconstruction and novel view synthesis that are closely related to our approach.
+                </p>
+                <p>
+                    The work in <a href="https://arxiv.org/abs/2308.04079">3DGS: 3D Gaussian Splatting for Real-time Rendering</a> provides real-time rendering capabilities, though it lacks the detailed modeling of scattering media needed for underwater scenes.
+                    </p>
+                <p>
+                <a href="https://arxiv.org/abs/2304.07743">SeaThru-NeRF: Neural Radiance Fields in Scattering Media</a> focuses on overcoming underwater artifacts caused by scattering media, offering a first step towards scattering-aware novel view synthesis in underwater environments.
+                </p>
+                <p>
+                <a href="https://arxiv.org/abs/2303.04025">DeepSeeColor: Realtime Adaptive Color Correction for Autonomous  Underwater Vehicles via Deep Learning Methods</a> introduces deep learning models to restore underwater images, closely related to our work in removing water medium effects.
+                </p>
+            </div>
+            </div>
+       
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@misc{liu2024atomgs,
+        title={AtomGS: Atomizing Gaussian Splatting for High-Fidelity Radiance Field}, 
+        author={Rong Liu and Rui Xu and Yue Hu and Meida Chen and Andrew Feng},
+        year={2024},
+        eprint={2405.12369},
+        archivePrefix={arXiv},
+        primaryClass={cs.CV},
+        url={https://rongliu-leo.github.io/AtomGS/}
+    }</code></pre>
+  </div>
+</section>
+
+
+<section class="section">
+<div class="container is-max-desktop">
+
+    <!-- Concurrent Work. -->
+    <div class="columns is-centered">
+    <div class="column is-full-width">
+        <!-- Concurrent Work. -->
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+            <h2 class="title is-3">Contact</h2>
+        
+            <div class="content has-text-justified">
+            <p class="section-content-text">
+                Feel free to contact us at <strong>jieyuyuan.cn[AT]gmail.com</strong> !
+            </p>
+            </div>
+            </div>
+        
+</div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
