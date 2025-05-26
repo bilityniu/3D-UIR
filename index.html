@@ -466,7 +466,8 @@
                 </a>
               </span> -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
+                <!-- <a href="https://arxiv.org/abs/2011.12948" -->
+                <a 
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -555,19 +556,19 @@
                     <strong>Overview of 3D-UIR:</strong>  
                 </p>
                 <ul>
-                    <li><strong>Appearance Modeling Branch (Yellow):</strong>  
+                    <li><strong>Underwater Appearance Modeling Branch (<span style="color: #ffe0b3; font-weight: bold;">Yellow</span>):</strong>  
                         This branch incorporates appearance features and embeddings that are crucial for maintaining view consistency, ensuring accurate scene representation across various perspectives.
                     </li>
-                    <li><strong>Medium Modeling Branch (Red):</strong>  
+                    <li><strong>Scatter Medium Modeling Branch (<span style="color: #ffcccc; font-weight: bold;">Red</span>):</strong>  
                         The medium modeling branch separately handles backscatter and attenuation, key factors that influence the appearance of objects in underwater environments.
                     </li>
-                    <li><strong>Pseudo-Depth Maps (Blue):</strong>  
+                    <li><strong>Depth-guided Regularization Optimization (<span style="color: #66bfff; font-weight: bold;">Blue</span>):</strong>  
                         Pseudo-depth maps are utilized to guide distance optimization, improving the accuracy of parameter estimation and enhancing the overall depth accuracy in the scene reconstruction process.
                     </li>
                 </ul>
                 <p>
                     <strong>Physics-Based Integration:</strong>  
-                    All components—Appearance Modeling, Medium Modeling, and Pseudo-depth Maps—are integrated into a unified framework through a physics-based underwater image formation model during differentiable rasterization, allowing for smooth, gradient-based optimization.Our method effectively disentangles object appearance from the water medium effects using specialized Gaussian modeling techniques.
+                    All components, including UAM, SMD, and DRO, are integrated into a unified framework through a physics-based underwater image formation model during differentiable rasterization, allowing for smooth, gradient-based optimization.Our method effectively disentangles object appearance from the water medium effects using specialized Gaussian modeling techniques.
                 </p>
             </div>
         </div>
@@ -994,9 +995,9 @@
             <strong>Quantitative evaluation of existing methods:</strong>
             Metrics are averaged across all scenes in various datasets.
             The top three rankings in each category are highlighted:
-            <span style="background-color: rgba(255, 0, 0, 0.5); padding: 0 4px;">1st</span>,
-            <span style="background-color: rgba(255, 165, 0, 0.4); padding: 0 4px;">2nd</span>,
-            <span style="background-color: rgba(255, 255, 0, 0.3); padding: 0 4px;">3rd</span>.
+            <span style="background-color: #ffcccc; padding: 0 4px;">1st</span>,
+            <span style="background-color: #ffe0b3; padding: 0 4px;">2nd</span>,
+            <span style="background-color: #ffffcc; padding: 0 4px;">3rd</span>.
             Arrows indicate whether higher (↑) or lower (↓) values are better.
             <br><br>
             <strong>
@@ -1042,7 +1043,7 @@
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
+    <!-- <h2 class="title">BibTeX</h2>
     <pre><code>@misc{liu2024atomgs,
         title={AtomGS: Atomizing Gaussian Splatting for High-Fidelity Radiance Field}, 
         author={Rong Liu and Rui Xu and Yue Hu and Meida Chen and Andrew Feng},
@@ -1051,7 +1052,7 @@
         archivePrefix={arXiv},
         primaryClass={cs.CV},
         url={https://rongliu-leo.github.io/AtomGS/}
-    }</code></pre>
+    }</code></pre> -->
   </div>
 </section>
 
