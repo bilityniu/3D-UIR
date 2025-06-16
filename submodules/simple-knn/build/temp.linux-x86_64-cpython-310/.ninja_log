@@ -1,0 +1,4 @@
+# ninja log v5
+0	5195	1731297428821874848	/media/jieyu-yuan/data/3DGS/gaussian-splatting-depth/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/simple_knn.o	65da78f009120df2
+0	8824	1731297432448833538	/media/jieyu-yuan/data/3DGS/gaussian-splatting-depth/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/ext.o	2238d6feb5e09419
+0	25421	1731297449046645616	/media/jieyu-yuan/data/3DGS/gaussian-splatting-depth/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/spatial.o	43c1a47fcf4e0138
