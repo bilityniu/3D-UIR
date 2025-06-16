@@ -40,12 +40,9 @@ Our method effectively models the participating medium to render photorealistic 
 
 We evaluate our method on three datasets: **SeaThru-NeRF**, **Underwater in the Wild (U-IW)**, and **our Simulated dataset (U-S)**. Our method achieves state-of-the-art performance across all metrics:
 
-| Method | SeaThru-NeRF ||| U-IW ||| U-S ||| Speed ||
-|--------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|        | PSNR↑ | SSIM↑ | LPIPS↓ | PSNR↑ | SSIM↑ | LPIPS↓ | PSNR↑ | SSIM↑ | LPIPS↓ | FPS↑ | Training↓ |
-| SeaThru-NeRF | 27.394 | 0.860 | 0.215 | 18.942 | 0.644 | 0.383 | 24.436 | 0.805 | 0.293 | 0.55 | 2h 39m |
-| 3DGS | 26.188 | 0.859 | 0.238 | 27.361 | 0.894 | 0.158 | 29.274 | 0.881 | 0.233 | 149.36 | 17m |
-| **Ours** | **28.116** | **0.876** | **0.202** | **28.198** | **0.902** | **0.150** | **31.227** | **0.891** | **0.187** | 48.72 | 48m |
+<p align="center">
+<img src="./static/images/metric.png" alt="Quantitative Comparison" style="width: 100%; height: auto;">
+</p>
 
 
 ## 🛠️ Installation
