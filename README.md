@@ -38,7 +38,7 @@ Our method effectively models the participating medium to render photorealistic 
 
 ### Quantitative Comparison
 
-We evaluate our method on three datasets: **SeaThru-NeRF**, **Underwater in the Wild (U-IW)**, and **our Simulated dataset (U-S)**. Our method achieves state-of-the-art performance across all metrics:
+We evaluate our method on three datasets: **SeaThru-NeRF**, **Underwater in the Wild (U-IW)**, and **our Simulated dataset (S-U)**. Our method achieves state-of-the-art performance across all metrics:
 
 <p align="center">
 <img src="./static/images/metric.png" alt="Quantitative Comparison" style="width: 100%; height: auto;">
