@@ -16,7 +16,7 @@ This repo contains code for the paper "3D-UIR: 3D Gaussian for Underwater 3D Sce
 
 
 ## ⭐ Method Overview
-We propose **3D-UIR**, a physics-based framework for underwater 3D scene reconstruction that addresses the unique challenges of complex light-media interactions in underwater environments. Our method disentangles object appearance from water medium effects through specialized Gaussian modeling, achieving both high-quality novel view synthesis and physically accurate scene restoration.
+We propose **3D-UIR**, a physics-based underwater 3D scene reconstruction framework that addresses the unique challenges of complex light-media interactions in underwater environments. Our method disentangles object appearance from water medium effects through specialized Gaussian modeling, achieving both high-quality novel view synthesis and physically accurate scene restoration.
 
 <p align="center">
 <img src="./static/images/pipeline.png" alt="3D-UIR Pipeline" style="width: 100%; height: auto;">
@@ -34,7 +34,7 @@ Our approach consists of three main components:
 <p align="center">
 <img src="./static/images/results.png" alt="Qualitative Comparison" style="width: 100%; height: auto;">
 </p>
-Our method effectively models the participating medium to render photorealistic novel views with accurate scene representation, yielding more consistent scene rendering across novel viewpoints and effective elimination of underwater artifacts.
+Our method effectively models the scene medium to render photorealistic novel views with accurate scene representation, yielding more consistent scene rendering across novel viewpoints and effective elimination of underwater artifacts.
 
 ### Quantitative Comparison
 
