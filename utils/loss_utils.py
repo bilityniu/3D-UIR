@@ -159,8 +159,6 @@ def anisotropic_total_variation_loss(img):
 def depth_aware_smooth_loss(invDepth, rgb_image, depth_mask=None, gamma=0.001):
     """
     Smoothness loss considering depth influence (simplified version, processes 3D tensors)
-    For D' = 1/(D + 1), we can derive D = (1/D' - 1)
-
     Args:
         invDepth: Inverse depth map [1, H, W]
         rgb_image: RGB image [3, H, W]
@@ -168,7 +166,7 @@ def depth_aware_smooth_loss(invDepth, rgb_image, depth_mask=None, gamma=0.001):
         gamma: Parameter to avoid division by zero
     """
     # Recover depth from inverse depth (for weight calculation)
-    depth = (1.0 / invDepth.clamp(min=0.001)) - 1.0
+    depth = (1.0 / invDepth.clamp(min=0.001))
 
     # Small weights for near regions (small depth), large weights for far regions (large depth)
     depth_weights = torch.exp(-depth / depth.mean())
