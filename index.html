@@ -43,51 +43,132 @@
   <script src="./static/js/index.js"></script>
 
   <style>
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            background-color: #fcfcfc;
+        }
 
-.comparison-table-wrapper {
-    width: 35.7%;
-    margin: 2rem auto;
-    overflow-x: auto;
+        /* 保持标题和作者部分使用 Google Sans 或更正式的字体 */
+        h1, h2, h3, h4, h5, h6, .title, .publication-title, .publication-authors {
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        /* 优化链接颜色 */
+        a {
+            color: #3273dc;
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: #1e4b8f;
+        }
+
+        /* Hero 按钮美化 */
+        .publication-links .button {
+            background-color: #363636;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 10px 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .publication-links .button:hover {
+            background-color: #4a4a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+            color: #fff;
+        }
+        .publication-links .icon {
+            margin-right: 6px;
+        }
+
+        /* 图片圆角和阴影 */
+        .hero-body img, .teaser img, .pipeline-image {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Section 间距与背景 */
+        section.section {
+            padding: 3rem 1.5rem;
+        }
+        section.hero {
+            background-color: #fff;
+        }
+        
+        /* 交替背景色：浅灰 */
+        .section-light {
+            background-color: #fcfcfc;
+        }
+        .section-dark {
+            background-color: #f5f5f5;
+        }
+
+        /* 标题样式增强 */
+        .title.publication-title {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .publication-authors {
+            margin-top: 1.5rem;
+        }
+        .author-block a {
+            font-weight: 500;
+        }
+
+        .comparison-table-wrapper {
+    width: 100%;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    overflow-x: visible; /* 移除滚动条 */
 }
 
 .comparison-table {
-    width: 100%;
+    width: auto;
+    max-width: 98%; /* 稍微放宽一点限制 */
     border-collapse: collapse;
-    font-size: 0.85rem;
+    font-size: 0.85rem; /* 从 0.8rem 调大到 0.85rem */
     text-align: center;
-    border: 1px solid #ddd;
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: table;
 }
 
 .comparison-table th,
 .comparison-table td {
-    padding: 6px 10px;
-    border: 1px solid #ddd;
-    transition: all 0.2s ease; /* 为表格单元格添加平滑过渡效果 */
+    padding: 10px 8px; /* 增加内边距，从 8px 6px 调大 */
+    border: none;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap; 
 }
 
 /* 表头样式 */
 .comparison-table thead {
-    background-color: #f5f5f5;
+    background-color: white;
     font-weight: bold;
+    border-bottom: 1px solid #333; /* 表头下划线 */
 }
 
-/* 每行的交替背景色 (灰白交替) */
+.comparison-table thead th {
+    vertical-align: bottom;
+}
+
+/* 移除斑马纹，改用悬停高亮 */
 .comparison-table tr:nth-child(odd) {
-    background-color: #f9f9f9; /* 浅灰色背景 */
-    transition: background-color 0.2s ease; /* 平滑过渡背景色 */
+    background-color: white;
 }
-
 .comparison-table tr:nth-child(even) {
-    background-color: #eaeaea; /* 稍深的灰色背景 */
-    transition: background-color 0.2s ease; /* 平滑过渡背景色 */
+    background-color: white;
 }
 
-/* 鼠标悬停时改变字体颜色为橙色，字体加粗 */
 .comparison-table tr:hover {
-    color: #66b3ff; /* 字体颜色变为浅蓝色 */
-    font-weight: bold; /* 字体加粗 */
-    cursor: pointer; /* 鼠标指针变成点击样式 */
-    transition: color 0.1s ease, font-weight 0.1s ease; /* 平滑过渡字体颜色和加粗效果 */
+    background-color: #f8f9fa; /* 极淡的悬停色 */
+    color: #333; /* 保持文字深色，更易读 */
+    font-weight: normal; /* 取消加粗，保持清爽 */
+    transition: background-color 0.2s;
 }
 
 /* 高亮效果的自定义颜色 */
@@ -124,47 +205,77 @@
 }
 
 
-        /* comparison-container 和 video-selector 调整垂直方向 */
+        /* 重构后的布局样式 */
+        
+        /* 1. 布局容器 */
+        .comparison-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 2. 视频核心区域 */
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            max-width: 960px; /* 统一为 960px，与 is-max-desktop 一致 */
+            aspect-ratio: 16 / 9;
+            flex: 1 1 600px; /* 允许伸缩，最小 600px */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            order: 2; /* 放在中间 */
+            background: #000;
+        }
 
         .video-container {
-            all: unset; /* 禁用所有继承样式 */
-            position: absolute  ;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
         }
 
         #video1 {
-            all: unset; /* 禁用所有继承样式 */
-            position: absolute;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
         #video2-container {
-            all: unset; /* 禁用所有继承样式 */
             position: absolute;
-            width: 50%;
+            top: 0;
+            left: 0;
+            width: 50%; /* 初始值 */
             height: 100%;
             overflow: hidden;
+            z-index: 2;
         }
 
         #video2 {
-            all: unset; /* 禁用所有继承样式 */
-            position: absolute;
-            width: 1280px;
             height: 100%;
             object-fit: cover;
+            /* 宽度将由 JS 动态控制 */
+            max-width: none; 
         }
 
         .slider {
             position: absolute;
-            width: 5px;
+            width: 4px;
             height: 100%;
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
             left: 50%;
             cursor: ew-resize;
             z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
         .slider-button {
@@ -177,224 +288,182 @@
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: ew-resize;
-        }
-
-        .comparison-wrapper {
-            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: flex-start;
-            /* width: 100%; */
-            padding: 20px 0;
-            box-sizing: border-box;
+        }
+        
+        .slider-button::after {
+            content: '↔';
+            color: #333;
+            font-size: 14px;
         }
 
-/* 中间视频 */
-.comparison-container {
-    width: 1280px;
-    height: 720px;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 1;
-    top: 80px; /* ✅ 往下偏移 50px */
-}
+        /* 3. 侧边栏选择器 */
+        .method-selector {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-/* 左右选择器 */
-.method-selector {
-    position: absolute;
-    width: 300px;
-    top: 350px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 2;
-    box-sizing: border-box;
-}
+        .left-selector {
+            order: 1;
+        }
 
-/* 左边贴紧视频左边 + 5px */
-.left-selector {
-    left: calc(50% - 640px - 300px - 45px);  /* 50% 中心 - 视频宽度/2 - 选择器宽度 - 5px */
-}
-
-/* 右边贴紧视频右边 + 5px */
-.right-selector {
-    left: calc(50% + 640px + 45px);  /* 50% 中心 + 视频宽度/2 + 5px */
-}
-
+        .right-selector {
+            order: 3;
+        }
+        
+        .method-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .method-group label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #333;
+        }
 
         .mode-select {
-            margin-left: 10px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            background-color: #f8f8f8;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
             cursor: pointer;
             transition: 0.2s;
         }
 
         .mode-select:hover {
-            background-color: #ddd;
+            background-color: #e9e9e9;
         }
-
 
         .mode-select.active {
             background: #4CAF50;
             color: white;
+            border-color: #4CAF50;
         }
 
-        .mode-select option {
-            background: white;
-            color: black;
-        }
-
-        .video-selector {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%) translateY(40px); /* 从当前位置向下移动20px */
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-direction: row; /* 保持横向布局 */
-        }
-
-        .video-selector label {
-            color: white;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .video-selector select {
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 4px;
-            border: none;
-            background: white;
-            cursor: pointer;
-        }
-
-        .filter-controls {
-            position: absolute;
-            bottom: -130px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 5px;
-            display: flex;
-            gap: 20px;
-            z-index: 20;
-        }
-
-        .filter-control {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-        }
-
-        .filter-control label {
-            margin-bottom: 5px;
-        }
-
-        .filter-control input {
-            width: 150px;
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            height: 5px;
-            border-radius: 5px;
-            background: #d3d3d3;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background: #4CAF50;
-            cursor: pointer;
-        }
-
-        .play-pause-button {
-            background: #ffffff;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 12px;
-            cursor: pointer;
-            margin-right: 0px;
-            width: 80px;
-        }
-
-        .play-pause-button:hover {
-            background: #e0e0e0;
-        }
-
+        /* 4. 说明区域 (Readme) */
         .readme-container {
-            z-index: 3;
-            position: absolute;
-            top: -10px; /* 根据视觉微调 */
-            left: calc(50% - 640px - 450px); /* 视频左边 + 50px */
+            order: 0;
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 10px;  
-            width: calc(70px * 5 + 4 * 5px + 30px);  
+            justify-content: center;
+            margin-bottom: 10px;
         }
-
+        
         .readme-box {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 5px;
-            color: white;
-            font-size: 14px;
-            box-sizing: border-box;
-            width: 100%; 
+            background: #f5f5f5;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: #333;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
+        
         .readme-title {
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #4CAF50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
         }
 
-        .readme-content {
-            line-height: 1.4;
+        /* 5. 底部控制栏 */
+        .filter-controls {
+            order: 4;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
         }
-
         
-        .method-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; /* 调整每个 method-group 之间的间距 */
-        }
-
-        .method-group {
-            display: flex;
-            align-items: center;
-            padding: 2px 0; /* 进一步增加上下间距 */
-        }
-
-        label {
-            width: 150px;
+        .play-pause-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            cursor: pointer;
             font-weight: bold;
-            color: white; /* 将文本颜色设为白色 */
+            font-size: 1rem;
+            transition: background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .play-pause-button:hover {
+            background: #45a049;
         }
 
-        .video-selector-container{
-            position: relative; 
-
+        /* 6. 顶部视频选择器 */
+        .video-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px auto 10px;
+            background: #f5f5f5;
+            padding: 10px 25px;
+            border-radius: 30px;
+            width: fit-content;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .video-selector label {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .video-selector select {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
 
-        .method-selectors-container {
-            position: relative;  /* 使子元素（left-selector 和 right-selector）相对定位 */
-            width: 100%;         /* 容器宽度 */
-            height: 100%;        /* 容器高度，根据需要调整 */
+        /* 7. 响应式适配 */
+        @media screen and (max-width: 1200px) {
+            .comparison-container {
+                flex-basis: 100%; /* 在中等屏幕强制换行 */
+                order: 1; /* 视频置顶 */
+            }
+            .left-selector {
+                order: 2;
+                width: 45%;
+            }
+            .right-selector {
+                order: 3;
+                width: 45%;
+            }
+            .readme-container {
+                order: 0;
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            .left-selector, .right-selector {
+                width: 100%; /* 移动端占满 */
+            }
+            .video-selector {
+                width: 90%;
+                box-sizing: border-box;
+            }
         }
 
         html {
@@ -411,6 +480,26 @@
 </head>
 <body>
 
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <!-- <a class="navbar-item" href="#">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a> -->
+    </div>
+
+  </div>
+</nav>
+
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -425,9 +514,9 @@
             <span class="author-block">
               <a href="https://jieyu-yuan.github.io/">Jieyu Yuan</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="https://github.com/uJunLI">Yujun Li</a><sup>1</sup>,</span>
+              <a href="">Yujun Li</a><sup>1</sup>,</span>
             <span class="author-block">
-                <a href="https://github.com/c-pupil">Yuanlin Zhang</a><sup>1,2</sup>,
+                <a href="https://c-pupil.github.io/">Yuanlin Zhang</a><sup>1,2</sup>,
             </span>
             <span class="author-block">
               <a href="https://mmcheng.net/clguo/">Chunle Guo</a><sup>1,3</sup>,
@@ -505,9 +594,23 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./static/images/teaser.png" alt="Teaser" style="width: 100%; height: auto;" />
+      <!-- Summary Box -->
+      <div style="background-color: #fff; padding: 2rem; border-radius: 12px; margin: 0 0 2rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #eee;">
+          <h4 class="title is-4" style="margin-bottom: 1rem; color: #333; display: flex; align-items: center; justify-content: center;">
+              <span class="icon is-large" style="margin-right: 0.5rem; color: #ffb703;">
+                  <i class="fas fa-star"></i>
+              </span>
+              TL;DR
+          </h4>
+          <p class="is-size-6" style="line-height: 1.8; color: #555; text-indent: 2em; text-align: justify;">
+              We propose <strong>3D-UIR</strong>, the first <strong>appearance-medium decoupling framework</strong> for underwater 3D reconstruction. 
+              By utilizing <strong>pose-based embeddings</strong> to model view-dependent degradation and <strong>explicit parameterization</strong> for scattering media, our method enables both <strong>high-fidelity novel view synthesis</strong> and <strong>physically accurate scene restoration</strong>.
+          </p>
+      </div>
 
-      <div class="content has-text-justified" style="width: 100%; margin: 0 auto;">
+      <img src="./static/images/teaser.png" alt="Teaser" style="width: 100%; height: auto; margin-bottom: 2rem;" />
+
+      <div class="content has-text-justified" style="width: 100%; margin: 0 auto; font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
             Optical scattering and absorption in underwater environments present unique challenges for novel view synthesis. The standard volume rendering equation inadequately models participating media with suspended particles, leading to the incorrect reconstruction of volumetric water as floating artifacts in 3D representation <strong>(left)</strong>. Additionally, light source directionality and viewing angles cause attenuation variations that result in inconsistent scene appearance across viewpoints <strong>(right)</strong>.
             3DGS lacks proper modeling of scattering media, causing water column effects on scene surfaces and resulting in collapsed depth representations. Existing scattering NVS methods, e.g., SeaThru-NeRF, fail to account for dynamic photometric variations, which introduces water float artifacts (highlighted in yellow boxes).
             In contrast, our approach effectively models the participating medium to render photorealistic novel views with accurate scene representation, yielding more consistent scene rendering across novel viewpoints and effective elimination of underwater artifacts.
@@ -518,7 +621,7 @@
 </section>
 
 
-<section class="section">
+<section class="section section-light">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
@@ -545,15 +648,15 @@
 </section>
 
 
-<section class="hero teaser" >
-    <div class="container">
+<section class="hero teaser section-dark" >
+    <div class="container is-max-desktop">
         <div class="hero-body">
             <h2 class="title is-3" style="text-align: center">Pipeline</h2>
 
-            <img src="./static/images/pipeline.png" alt="Teaser" style="width: 1025px; height: auto;" />
-            <div class="content has-text-justified" style="width: 955px; margin: 0 auto;">
+            <img src="./static/images/pipeline.png" alt="Teaser" style="width: 100%; height: auto; display: block; margin: 0 auto 2rem auto;" />
+            <div class="content has-text-justified" style="width: 100%; margin: 0 auto; font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
                 <p>
-                    <strong>Overview of 3D-UIR:</strong>  
+                    <strong style="font-size: 1.2em;">Overview of 3D-UIR:</strong>  
                 </p>
                 <ul>
                     <li><strong>Underwater Appearance Modeling Branch (<span style="color: #ffe0b3; font-weight: bold;">Yellow</span>):</strong>  
@@ -739,12 +842,11 @@
             <button class="play-pause-button" id="playPauseButton">Pause</button>
         </div>
     </div>
-    <div class="container" style="width: 1280px; margin: 150px auto 0 auto;">
+    <div class="container is-max-desktop" style="margin-top: 30px;">
         <div class="content has-text-justified">
             <strong>Comparative Video Analysis:</strong>
             The comparative results validate the effectiveness of our method in achieving high-quality <span style="color: #66bfff; font-weight: bold;">RGB reconstruction</span> and precise <span style="color: #66bfff; font-weight: bold;">depth estimation</span>. Compared to existing baselines, our approach demonstrates improved structural consistency and photometric accuracy, particularly in distant regions where alternative methods tend to produce artifacts or exhibit depth collapse. These findings underscore the robustness of our framework in addressing the challenges of underwater visual degradation. Furthermore, our <span style="color: #66bfff; font-weight: bold;">descattering restoration</span> significantly improves visual clarity, enabling more faithful scene recovery under scattering-dominant conditions.
         </div>
-        
     </div>
     
 
@@ -901,96 +1003,127 @@
             }
             isPlaying = !isPlaying;
         });
+
+        // 动态调整 video2 宽度以匹配容器 (响应式支持)
+        function updateVideo2Width() {
+            if (container && video2) {
+                const rect = container.getBoundingClientRect();
+                // 只有当宽度有效时才更新
+                if (rect.width > 0) {
+                    video2.style.width = `${rect.width}px`;
+                }
+            }
+        }
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', updateVideo2Width);
+        
+        // 使用 ResizeObserver 监听容器大小变化 (更精确)
+        if (typeof ResizeObserver !== 'undefined' && container) {
+            const resizeObserver = new ResizeObserver(() => {
+                updateVideo2Width();
+            });
+            resizeObserver.observe(container);
+        }
+        
+        // 初始化调用
+        updateVideo2Width();
+        // 延迟再次调用以防某些布局延迟
+        setTimeout(updateVideo2Width, 100);
+        setTimeout(updateVideo2Width, 500);
+
     </script>
 
 
 
 
 
-<section class="section" style="margin-top: 0px;">
+<section class="section section-light" style="margin-top: 0px;">
     <div class="container is-max-desktop">
-        <table class="comparison-table" style="margin-top: 10px;">
-            <h2 class="title is-3" style="text-align: center; margin-bottom: 22px;">Quantitative Results Comparison</h2>
+        <h2 class="title is-3" style="text-align: center; margin-bottom: 22px;">Quantitative Results Comparison</h2>
 
-            <div class="content has-text-justified">
-                We evaluate our method on three datasets: <strong>SeaThru-NeRF</strong>, <strong>Underwater in the Wild (U-IW)</strong>, and <strong>our Simulated dataset (U-S)</strong>. 
-                SeaThru-NeRF contains four forward-facing real underwater scenes with diverse aquatic and imaging conditions. 
-                U-IW consists of frames sampled from in-the-wild underwater videos collected from the Internet. 
-                Both datasets feature unbounded camera-to-scene distances. 
-                To further evaluate our method, we simulated underwater scenes using four scenes from the MipNeRF-360 dataset.                          
-               </div>
+        <div class="content has-text-justified">
+            We evaluate our method on three datasets: <strong>SeaThru-NeRF</strong>, <strong>Underwater in the Wild (U-IW)</strong>, and <strong>our Simulated dataset (U-S)</strong>. 
+            SeaThru-NeRF contains four forward-facing real underwater scenes with diverse aquatic and imaging conditions. 
+            U-IW consists of frames sampled from in-the-wild underwater videos collected from the Internet. 
+            Both datasets feature unbounded camera-to-scene distances. 
+            To further evaluate our method, we simulated underwater scenes using four scenes from the MipNeRF-360 dataset.                          
+        </div>
 
-            <thead>
-                <tr>
-                    <th rowspan="2">Method</th>
-                    <th colspan="3">Seathru-Nerf</th>
-                    <th colspan="3">U-IW</th>
-                    <th colspan="3">S-U</th>
-                    <th colspan="2">Speed</th>
-                </tr>
-                <tr>
-                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
-                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
-                    <th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th>
-                    <th>FPS ↑</th><th>Training ↓</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>SeaThru-Nerf</td>
-                    <td class="highlight-yellow">27.394</td><td>0.860</td><td>0.215</td>
-                    <td>18.942</td><td>0.644</td><td>0.383</td>
-                    <td>24.436</td><td>0.805</td><td>0.293</td>
-                    <td>0.55</td><td>2 h 39 m</td>
-                </tr>
-                <tr>
-                    <td>3DGS</td>
-                    <td>26.188</td><td>0.859</td><td>0.238</td>
-                    <td class="highlight-orange">27.361</td><td class="highlight-orange">0.894</td><td class="highlight-orange">0.158</td>
-                    <td class="highlight-yellow">29.274</td><td class="highlight-orange">0.881</td><td class="highlight-orange">0.233</td>
-                    <td>149.36</td><td>17 m</td>
-                </tr>
-                <tr>
-                    <td>Splatfacto-Wild</td>
-                    <td>25.750</td><td>0.832</td><td>0.229</td>
-                    <td>25.159</td><td>0.847</td><td>0.209</td>
-                    <td>25.786</td><td>0.853</td><td>0.260</td>
-                    <td>42.98</td><td>21 m</td>
-                </tr>
-                <tr>
-                    <td>SeaSplat</td>
-                    <td>27.385</td><td class="highlight-orange">0.866</td><td class="highlight-red">0.194</td>
-                    <td class="highlight-yellow">27.023</td><td class="highlight-yellow">0.889</td><td class="highlight-yellow">0.159</td>
-                    <td>28.566</td><td>0.861</td><td>0.253</td>
-                    <td>42.69</td><td>1 h 25 m</td>
-                </tr>
-                <tr>
-                    <td>RecGS</td>
-                    <td>25.829</td><td>0.857</td><td>0.233</td>
-                    <td>22.186</td><td>0.838</td><td>0.180</td>
-                    <td>24.620</td><td>0.825</td><td>0.259</td></div>
-                    <td>146.62</td><td>38 m</td>
-                </tr>
-                <tr>
-                    <td>Water-Splatting</td>
-                    <td class="highlight-orange">27.573</td><td class="highlight-yellow">0.865</td><td class="highlight-orange">0.198</td>
-                    <td>25.673</td><td>0.882</td><td>0.167</td>
-                    <td class="highlight-orange">29.973</td><td class="highlight-yellow">0.878</td><td class="highlight-yellow">0.235</td>
-                    <td>35.80</td><td>29 m</td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="./static/images/favicon.png" alt="icon" style="width: 20px; height: 20px; position: relative; left: -2px; top: 2px;">
-                        <strong style="color: blueviolet; position: relative; left: -2px;top: -2px;">Ours</strong>
-                    </td>
-                    
-                    <td class="highlight-red">28.116</td><td class="highlight-red">0.876</td><td class="highlight-yellow">0.202</td>
-                    <td class="highlight-red">28.198</td><td class="highlight-red">0.902</td><td class="highlight-red">0.150</td>
-                    <td class="highlight-red">31.227</td><td class="highlight-red">0.891</td><td class="highlight-red">0.187</td>
-                    <td>48.72</td><td>48 m</td>
-                </tr>
-            </tbody>
-        </table>    
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align: middle;">Method</th>
+                        <th colspan="3">Seathru-Nerf</th>
+                        <th colspan="3">U-IW</th>
+                        <th colspan="3">S-U</th>
+                        <th colspan="2">Speed</th>
+                    </tr>
+                    <tr>
+                        <th>PSNR&nbsp;↑</th><th>SSIM&nbsp;↑</th><th>LPIPS&nbsp;↓</th>
+                        <th>PSNR&nbsp;↑</th><th>SSIM&nbsp;↑</th><th>LPIPS&nbsp;↓</th>
+                        <th>PSNR&nbsp;↑</th><th>SSIM&nbsp;↑</th><th>LPIPS&nbsp;↓</th>
+                        <th>FPS&nbsp;↑</th><th>Training&nbsp;↓</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SeaThru-Nerf</td>
+                        <td class="highlight-yellow">27.394</td><td>0.860</td><td>0.215</td>
+                        <td>18.942</td><td>0.644</td><td>0.383</td>
+                        <td>24.436</td><td>0.805</td><td>0.293</td>
+                        <td>0.55</td><td>2 h 39 m</td>
+                    </tr>
+                    <tr>
+                        <td>3DGS</td>
+                        <td>26.188</td><td>0.859</td><td>0.238</td>
+                        <td class="highlight-orange">27.361</td><td class="highlight-orange">0.894</td><td class="highlight-orange">0.158</td>
+                        <td class="highlight-yellow">29.274</td><td class="highlight-orange">0.881</td><td class="highlight-orange">0.233</td>
+                        <td>149.36</td><td>17 m</td>
+                    </tr>
+                    <tr>
+                        <td>Splatfacto-Wild</td>
+                        <td>25.750</td><td>0.832</td><td>0.229</td>
+                        <td>25.159</td><td>0.847</td><td>0.209</td>
+                        <td>25.786</td><td>0.853</td><td>0.260</td>
+                        <td>42.98</td><td>21 m</td>
+                    </tr>
+                    <tr>
+                        <td>SeaSplat</td>
+                        <td>27.385</td><td class="highlight-orange">0.866</td><td class="highlight-red">0.194</td>
+                        <td class="highlight-yellow">27.023</td><td class="highlight-yellow">0.889</td><td class="highlight-yellow">0.159</td>
+                        <td>28.566</td><td>0.861</td><td>0.253</td>
+                        <td>42.69</td><td>1 h 25 m</td>
+                    </tr>
+                    <tr>
+                        <td>RecGS</td>
+                        <td>25.829</td><td>0.857</td><td>0.233</td>
+                        <td>22.186</td><td>0.838</td><td>0.180</td>
+                        <td>24.620</td><td>0.825</td><td>0.259</td></div>
+                        <td>146.62</td><td>38 m</td>
+                    </tr>
+                    <tr>
+                        <td>Water-Splatting</td>
+                        <td class="highlight-orange">27.573</td><td class="highlight-yellow">0.865</td><td class="highlight-orange">0.198</td>
+                        <td>25.673</td><td>0.882</td><td>0.167</td>
+                        <td class="highlight-orange">29.973</td><td class="highlight-yellow">0.878</td><td class="highlight-yellow">0.235</td>
+                        <td>35.80</td><td>29 m</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="./static/images/favicon.png" alt="icon" style="width: 20px; height: 20px; position: relative; left: -2px; top: 2px;">
+                            <strong style="color: blueviolet; position: relative; left: -2px;top: -2px;">Ours</strong>
+                        </td>
+                        
+                        <td class="highlight-red">28.116</td><td class="highlight-red">0.876</td><td class="highlight-yellow">0.202</td>
+                        <td class="highlight-red">28.198</td><td class="highlight-red">0.902</td><td class="highlight-red">0.150</td>
+                        <td class="highlight-red">31.227</td><td class="highlight-red">0.891</td><td class="highlight-red">0.187</td>
+                        <td>48.72</td><td>48 m</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="content has-text-justified" style="margin-top: 15px;">
             <strong>Quantitative evaluation of existing methods:</strong>
             Metrics are averaged across all scenes in various datasets.
@@ -1010,7 +1143,7 @@
 
 
 
-<section class="section">
+<section class="section section-dark">
   <div class="container is-max-desktop">
 
     <!-- Concurrent Work. -->
@@ -1041,7 +1174,7 @@
 </section>
 
 
-<section class="section" id="BibTeX">
+<section class="section section-light" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
     <pre><code>@misc{yuan20253duir,
