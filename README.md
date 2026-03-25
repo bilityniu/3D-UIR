@@ -11,9 +11,9 @@ This repo contains code for the paper "3D-UIR: 3D Gaussian for Underwater 3D Sce
 </p>
 
 ## 📰 News
-* **[2026.03.24]** 🎉🎉🎉 3D-UIR has been accepted by IEEE TIP 2026! 
-* **[2025.05.27]** Paper released on arXiv! [[Paper](https://arxiv.org/abs/2505.21238)]
+* **[2026.03.24]** 🎉🎉🎉 3D-UIR has been accepted by IEEE TIP 2026!
 * **[2025.06.16]** Code repository is now available! [[Code](https://github.com/bilityniu/3D-UIR)]
+* **[2025.05.27]** Paper released on arXiv! [[Paper](https://arxiv.org/abs/2505.21238)]
 
 
 ## ⭐ Method Overview
