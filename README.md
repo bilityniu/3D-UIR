@@ -61,8 +61,6 @@ conda activate 3d-uir
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
 conda install cudatoolkit-dev=11.8 -c conda-forge
 
-pip install -r requirements.txt
-
 pip install submodules/diff-gaussian-rasterization
 pip install submodules/simple-knn/
 pip install submodules/fused-ssim/
@@ -174,15 +172,16 @@ Our COLMAP loaders expect the following dataset structure in the source path loc
 If you find our repo useful for your research, please cite:
 
 ```bibtex
-@misc{yuan2025_3duir,
-  title={3D-UIR: 3D Gaussian for Underwater 3D Scene Reconstruction via Physics Based Appearance-Medium Decoupling}, 
-  author={Jieyu Yuan and Yujun Li and Yuanlin Zhang and Chunle Guo and Xiongxin Tang and Ruixing Wang and Chongyi Li},
-  year={2025},
-  eprint={2505.21238},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2505.21238}
-}
+@ARTICLE{3DUIR_TIP_2026,
+  author={Yuan, Jieyu and Li, Yujun and Zhang, Yuanlin and Guo, Chunle and Tang, Xiongxin and Wang, Ruixing and Li, Chongyi},
+  journal={IEEE Transactions on Image Processing}, 
+  title={3D-UIR: 3D Gaussian for Underwater 3D Scene Reconstruction via Physics-Based Appearance–Medium Decoupling}, 
+  year={2026},
+  volume={35},
+  number={},
+  pages={5452-5465},
+  keywords={Modeling;Media;Color;Neural radiance field;Ranking (statistics);Rendering (computer graphics);Optimization;Attenuation;Educational institutions;Three-dimensional displays;Underwater image;novel view synthesis;image restoration;appearance decoupling},
+  doi={10.1109/TIP.2026.3694143}}
 ```
 
 ## 📮 Contact
