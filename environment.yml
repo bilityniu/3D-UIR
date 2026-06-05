@@ -1,4 +1,4 @@
-name: gaussian_splatting
+name: 3d-uir
 channels:
   - pytorch
   - conda-forge
