@@ -4,7 +4,7 @@
 
 This repo contains code for the paper "3D-UIR: 3D Gaussian for Underwater 3D Scene Reconstruction via Physics-Based Appearance-Medium Decoupling"
 
-[**🌐 Homepage**](https://bilityniu.github.io/3D-UIR/) | [**📑 Paper**](https://arxiv.org/pdf/2505.21238) | [**💻 Code**](https://github.com/bilityniu/3D-UIR) | [**📖 arXiv**](https://arxiv.org/abs/2505.21238)
+[**🌐 Homepage**](https://bilityniu.github.io/3D-UIR/) | [**📑 Paper**](https://ieeexplore.ieee.org/document/11534399) | [**💻 Code**](https://github.com/bilityniu/3D-UIR) | [**📖 arXiv**](https://arxiv.org/abs/2505.21238)
 
 <p align="center">
 <img src="./static/images/teaser.png" alt="3D-UIR Overview" style="width: 100%; height: auto;">
